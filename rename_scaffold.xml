@@ -1,0 +1,30 @@
+<tool id="rename_scaffold" name="rename the scaffolds" version="0.1.0">
+    <description>Rename the scaffolds so that they won't exceed 31 characters</description>
+<stdio>
+    <exit_code range="1:" />
+</stdio>
+<command><![CDATA[
+    python $__tool_directory__/rename.py $input $output $index
+]]></command>
+<inputs>
+    <param name="input" type="data" format="fasta"/>
+</inputs>
+<outputs>
+    <data name="output" format="fasta" label="${tool.name} on ${on_string}: renamed_reference" />
+    <data name="index" format="fasta" label="${tool.name} on ${on_string}: name mapping"/>
+</outputs>
+<tests>
+    <test>
+        <!-- Test with Dbia3.fa -->
+        <param name="input" value="Dbia3.fa" />
+        <output name="output" file="Dbia3_renamed.fa"/>
+        <output name="index" file="Dbia3_index.fa"/>
+    </test>
+</tests>
+<help><![CDATA[
+This tool is to rename scaffolds in reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file
+
+]]></help>
+<citations>
+</citations>
+</tool>
