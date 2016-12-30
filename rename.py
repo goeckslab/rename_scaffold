@@ -14,13 +14,17 @@ def rename(inputfile, outputfile, indexfile):
                 if ">" in line:
                     oldname = line[1:].rstrip()
                     newname = "scaffold_" + str(i)
-                    line = ">" + newname + "\n"
+                    line = ">" + newname
                     i = i+1
                     namemap[oldname] = newname
-                out.write(line)
+                #TODO: Add line breaks to chromosome sequences that are in a single line
+                #else:
+                    #if (len(line) > 50):
+                        #for 
+                out.write(line.rstrip() + "\n")
     with open(indexfile, 'w') as index:
         for k in namemap:
-            index.write(k + "=>" + namemap[k] + "\n")
+            index.write(k + "\t" + namemap[k] + "\n")
 
 def main():
     inputfile = str(sys.argv[1])
