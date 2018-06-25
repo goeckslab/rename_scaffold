@@ -1,5 +1,5 @@
-<tool id="rename_scaffold" name="rename the scaffolds" version="1.1">
-    <description>Rename the scaffolds so that they won't exceed 31 characters</description>
+<tool id="rename_scaffold" name="rename the scaffolds" version="1.2">
+    <description>a Galaxy tool to rename the scaffolds in the reference genome so that they won't exceed 31 characters</description>
 <stdio>
     <exit_code range="1:" />
 </stdio>
@@ -22,7 +22,7 @@
     </test>
 </tests>
 <help><![CDATA[
-This tool is to rename scaffolds in reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file
+This tool is to rename scaffolds in the reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and also output a name mapping file
 
 ]]></help>
 <citations>
