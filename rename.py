@@ -1,8 +1,10 @@
 """
 Call rename to rename scaffolds in reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file
+Call truncate to truncate the scaffold names that are more than 31 characters.
 """
 import sys
 import csv
+
 
 def rename(inputfile, outputfile, writer):
     with open(outputfile, 'w') as out:
@@ -18,13 +20,30 @@ def rename(inputfile, outputfile, writer):
                     writer.writerow([oldname, newname])
                 out.write(line)
 
+def truncate(inputFile, outputFile):
+    with open(outputFile, 'w') as out:
+        with open(inputFile, 'r') as rf:
+            lines = rf.readlines()
+            for l in lines:
+                if ">" in l:
+                    name = l[1:].rstrip()
+                    if len(name) > 31:
+                        print "truncate %s to less than 31 characters" % name
+                        name = name[:31]
+                        l = ">" + name + "\n"
+                out.write(l)
+
 def main():
     inputfile = str(sys.argv[1])
-    outputfile = str(sys.argv[2])
-    indexfile = str(sys.argv[3])
-    csvfile = open(indexfile, 'w')
-    writer = csv.writer(csvfile)
-    rename(inputfile, outputfile, writer)
+    manipulate = str(sys.argv[2])
+    outputfile = str(sys.argv[3])
+    if manipulate == "rename":
+        indexfile = str(sys.argv[4])
+        csvfile = open(indexfile, 'w')
+        writer = csv.writer(csvfile)
+        rename(inputfile, outputfile, writer)
+    elif manipulate == "truncate":
+        truncate(inputfile, outputfile)
 
 if __name__ == "__main__":
     main()

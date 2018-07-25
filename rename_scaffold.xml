@@ -1,17 +1,29 @@
-<tool id="rename_scaffold" name="rename the scaffolds" version="1.2">
-    <description>a Galaxy tool to rename the scaffolds in the reference genome so that they won't exceed 31 characters</description>
+<tool id="rename_scaffold" name="rename the scaffolds" version="2.0">
+    <description>a Galaxy tool to rename or truncate the scaffold names in the reference genome so that they won't exceed 31 characters</description>
 <stdio>
     <exit_code range="1:" />
 </stdio>
 <command><![CDATA[
-    python $__tool_directory__/rename.py $input $output $index
+    #if $manipulate.manipulate_selector == "rename"
+      python $__tool_directory__/rename.py $input $manipulate.manipulate_selector $output $index
+    #elif $manipulate.manipulate_selector == "truncate"
+      python $__tool_directory__/rename.py $input $manipulate.manipulate_selector $output
+    #end if
 ]]></command>
 <inputs>
     <param name="input" type="data" format="fasta"/>
+    <conditional name="manipulate">
+        <param name="manipulate_selector" type="select" label="Choose whether you want to rename the scaffolds or truncate the scaffold names">
+            <option value="truncate" selected="true">Truncate the scaffold names if they exceed 31 characters</option>
+            <option value="rename">Rename the scaffold names</option>
+        </param>
+    </conditional>
 </inputs>
 <outputs>
-    <data name="output" format="fasta" label="${tool.name} on ${on_string}: renamed_reference" />
-    <data name="index" format="csv" label="${tool.name} on ${on_string}: name mapping"/>
+    <data name="output" format="fasta" label="${tool.name} on ${on_string}: fixed_reference" />
+    <data name="index" format="csv" label="${tool.name} on ${on_string}: name mapping">
+        <filter>manipulate['manipulate_selector'] == "rename"</filter>
+    </data>
 </outputs>
 <tests>
     <test>
