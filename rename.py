@@ -4,7 +4,7 @@ Call truncate to truncate the scaffold names that are more than 31 characters.
 """
 import sys
 import csv
-
+import codecs
 
 def rename(inputfile, outputfile, writer):
     with open(outputfile, 'w') as out:
@@ -21,14 +21,14 @@ def rename(inputfile, outputfile, writer):
                 out.write(line)
 
 def truncate(inputFile, outputFile):
-    with open(outputFile, 'w') as out:
-        with open(inputFile, 'r') as rf:
+    with codecs.open(outputFile, 'w', encoding='utf-8') as out:
+        with codecs.open(inputFile, 'r', encoding='utf-8') as rf:
             lines = rf.readlines()
             for l in lines:
                 if ">" in l:
                     name = l[1:].rstrip()
                     if len(name) > 31:
-                        print "truncate %s to less than 31 characters" % name
+                        print "truncate " + name.encode('utf-8') + " to less than 31 characters"
                         name = name[:31]
                         l = ">" + name + "\n"
                 out.write(l)
