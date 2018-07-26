@@ -1,4 +1,4 @@
-<tool id="rename_scaffold" name="rename the scaffolds" version="2.0">
+<tool id="rename_scaffold" name="rename the scaffolds" version="2.1">
     <description>a Galaxy tool to rename or truncate the scaffold names in the reference genome so that they won't exceed 31 characters</description>
 <stdio>
     <exit_code range="1:" />
@@ -55,11 +55,17 @@
         <param name="input" value="sequence_with_noascii_name_conflict.fa" />
         <param name="manipulate_selector" value="truncate" />
     </test>
+    <test>
+        <!-- Test input with tab -->
+        <param name="input" value="sequence_with_tab.fa" />
+        <param name="manipulate_selector" value="truncate" />
+        <output name="output" file="fixed_reference_with_tab.fasta" />
+    </test>
 </tests>
 <help><![CDATA[
 This tool is to rename scaffolds in the reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and also output a name mapping file.
 
-Or truncate the scaffold names that are more than 31 characters and replace each non-ASCII character with '_'
+Or truncate the scaffold names that are more than 31 characters and replace each invalid character (non-ASCII, '\\t', '\\n', '\\x0b', '\\x0c', '\\r') with '_'
 ]]></help>
 <citations>
 </citations>
