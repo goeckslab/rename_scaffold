@@ -9,7 +9,7 @@ import string
 
 def rename(inputfile, outputfile, writer):
     with open(outputfile, 'w') as out:
-        with open(inputfile, 'r') as rf:
+        with codecs.open(inputfile, 'r', encoding='utf-8') as rf:
             lines = rf.readlines()
             i = 1
             for line in lines:
@@ -18,10 +18,11 @@ def rename(inputfile, outputfile, writer):
                     newname = "scaffold_" + str(i)
                     line = ">" + newname + "\n"
                     i = i+1
-                    writer.writerow([oldname, newname])
+                    writer.writerow([oldname.encode('utf-8'), newname])
                 out.write(line)
 
 def truncate(inputFile, outputFile):
+    names = []
     with codecs.open(outputFile, 'w', encoding='utf-8') as out:
         with codecs.open(inputFile, 'r', encoding='utf-8') as rf:
             lines = rf.readlines()
@@ -33,6 +34,9 @@ def truncate(inputFile, outputFile):
                     if len(name) > 31:
                         name = name[:31]
                         print "\tTruncate the scaffold name to less than 31 characters: %s" % name
+                    if name in names:
+                        sys.exit("Name conflict! Name " + name + " already exist.")
+                    names.append(name)
                     l = ">" + name + "\n"
                     print "======================\n"
                 out.write(l)

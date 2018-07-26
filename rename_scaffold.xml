@@ -4,37 +4,61 @@
     <exit_code range="1:" />
 </stdio>
 <command><![CDATA[
-    #if $manipulate.manipulate_selector == "rename"
-      python $__tool_directory__/rename.py $input $manipulate.manipulate_selector $output $index
-    #elif $manipulate.manipulate_selector == "truncate"
-      python $__tool_directory__/rename.py $input $manipulate.manipulate_selector $output
+    #if $manipulate_selector == "rename"
+      python $__tool_directory__/rename.py $input $manipulate_selector $output $index
+    #elif $manipulate_selector == "truncate"
+      python $__tool_directory__/rename.py $input $manipulate_selector $output
     #end if
 ]]></command>
 <inputs>
     <param name="input" type="data" format="fasta"/>
-    <conditional name="manipulate">
-        <param name="manipulate_selector" type="select" label="Choose whether you want to rename the scaffolds or truncate the scaffold names">
-            <option value="truncate" selected="true">Truncate the scaffold names if they exceed 31 characters</option>
-            <option value="rename">Rename the scaffold names</option>
-        </param>
-    </conditional>
+    <param name="manipulate_selector" type="select" label="Choose whether you want to rename the scaffolds or truncate the scaffold names">
+        <option value="truncate" selected="true">Truncate the scaffold names if they exceed 31 characters</option>
+        <option value="rename">Rename the scaffold names</option>
+    </param>
 </inputs>
 <outputs>
     <data name="output" format="fasta" label="${tool.name} on ${on_string}: fixed_reference" />
     <data name="index" format="csv" label="${tool.name} on ${on_string}: name mapping">
-        <filter>manipulate['manipulate_selector'] == "rename"</filter>
+        <filter>manipulate_selector == "rename"</filter>
     </data>
 </outputs>
 <tests>
     <test>
-        <!-- Test with Dbia3.fa -->
+        <!-- Test rename input Dbia3.fa -->
         <param name="input" value="Dbia3.fa" />
+        <param name="manipulate_selector" value="rename" />
         <output name="output" file="Dbia3_renamed.fa"/>
         <output name="index" file="Dbia3_index.csv"/>
     </test>
+    <test>
+        <!-- Test truncate input Dbia3.fa -->
+        <param name="input" value="Dbia3.fa" />
+        <param name="manipulate_selector" value="truncate" />
+        <output name="output" file="Dbia3.fa"/>
+    </test>
+    <test>
+        <!-- Test rename input with non-ASCII charaters -->
+        <param name="input" value="sequence_with_noascii.fa" />
+        <param name="manipulate_selector" value="rename" />
+        <output name="output" file="renamed_sequence_with_noascii.fa" />
+        <output name="index" file="noascii_index.csv"/>
+    </test>
+    <test>
+        <!-- Test truncate input with non-ASCII charaters -->
+        <param name="input" value="sequence_with_noascii.fa" />
+        <param name="manipulate_selector" value="truncate" />
+        <output name="output" file="truncated_sequence_with_noascii.fa" />
+    </test>
+    <test expect_failure="true">
+        <!-- Test truncate input with non-ASCII charaters. Expect fail: name conflict! -->
+        <param name="input" value="sequence_with_noascii_name_conflict.fa" />
+        <param name="manipulate_selector" value="truncate" />
+    </test>
 </tests>
 <help><![CDATA[
-This tool is to rename scaffolds in the reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and also output a name mapping file
+This tool is to rename scaffolds in the reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and also output a name mapping file.
+
 Or truncate the scaffold names that are more than 31 characters and replace each non-ASCII character with '_'
 ]]></help>
 <citations>
