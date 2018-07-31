@@ -1,5 +1,5 @@
 """
-Call rename to rename scaffolds in reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file
+Call rename to rename scaffolds in target genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file
 Call truncate to truncate the scaffold names that are more than 31 characters. Replace each invalid character (non-ASCII, '\t', '\n', '\x0b', '\x0c', '\r') with '_'
 """
 import sys

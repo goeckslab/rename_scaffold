@@ -1,6 +1,6 @@
 categories: [Text Manipulation]
-description: Wrapper for the program which renames the scaffold
+description: Wrapper for the program which renames or truncates the scaffold names
 homepage_url: 'https://github.com/Yating-L/rename_scaffold'
-long_description: This tool is to rename scaffolds in reference genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file
+long_description: This tool is to rename or truncate scaffold names in target genome so that the sequence names are less than 31 characters. Rename all scaffolds to scaffold_1, scaffold_2, ..., scaffold_N and provide a name mapping file. Or truncate the scaffold names that are more than 31 characters and replace each invalid character (non-ASCII, '\\t', '\\n', '\\x0b', '\\x0c', '\\r') with '_' and also output a name mapping file.
 name: rename_scaffolds
 owner: yating-l
