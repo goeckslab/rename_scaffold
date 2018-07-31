@@ -21,21 +21,22 @@ def rename(inputfile, outputfile, writer):
                     writer.writerow([oldname.encode('utf-8'), newname])
                 out.write(line)
 
-def truncate(inputFile, outputFile, valid_characters):
+def truncate(inputFile, outputFile, valid_characters, writer):
     names = []
-    with codecs.open(outputFile, 'w', encoding='utf-8') as out:
+    with open(outputFile, 'w') as out:
         with codecs.open(inputFile, 'r', encoding='utf-8') as rf:
             lines = rf.readlines()
             for l in lines:
                 if ">" in l:
                     print l.encode('utf-8')
-                    name = l[1:].rstrip()
-                    name = substituteNonAscii(name, valid_characters)
+                    oldname = l[1:].rstrip()
+                    name = substituteNonAscii(oldname, valid_characters)
                     if len(name) > 31:
                         name = name[:31]
                         print "\tTruncate the scaffold name to less than 31 characters: %s" % name
                     if name in names:
                         sys.exit("Name conflict! Name " + name + " already exist.")
+                    writer.writerow([oldname.encode('utf-8'), name])
                     names.append(name)
                     l = ">" + name + "\n"
                     print "======================\n"
@@ -54,14 +55,14 @@ def main():
     inputfile = str(sys.argv[1])
     manipulate = str(sys.argv[2])
     outputfile = str(sys.argv[3])
-    valid_characters = string.letters + string.punctuation + string.digits + ' '
+    indexfile = str(sys.argv[4])
+    csvfile = open(indexfile, 'w')
+    writer = csv.writer(csvfile)
     if manipulate == "rename":
-        indexfile = str(sys.argv[4])
-        csvfile = open(indexfile, 'w')
-        writer = csv.writer(csvfile)
         rename(inputfile, outputfile, writer)
     elif manipulate == "truncate":
-        truncate(inputfile, outputfile, valid_characters)
+        valid_characters = string.letters + string.punctuation + string.digits + ' '
+        truncate(inputfile, outputfile, valid_characters, writer)
 
 if __name__ == "__main__":
     main()
